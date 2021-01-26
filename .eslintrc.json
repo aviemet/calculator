@@ -1,0 +1,90 @@
+{
+  "root": true,
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 2018,
+		"sourceType": "module",
+		"project": "./tsconfig.json"
+	},
+	"env": {
+		"browser": true,
+		"es6": true,
+		"node": true
+	},
+	"settings": {
+		"react": {
+			"pragma": "React",
+			"version": "detect"
+		}
+	},
+	"plugins": [
+		"react",
+		"@typescript-eslint"
+	],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+	],
+	"globals": {
+		"Atomics": "readonly",
+		"SharedArrayBuffer": "readonly"
+	},
+	"rules": {
+		"indent": "off",
+		"@typescript-eslint/indent": [ "error", "tab", {
+			"SwitchCase": 1,
+			"VariableDeclarator": "first",
+			"MemberExpression": 1,
+			"ArrayExpression": 1
+		} ],
+
+		"linebreak-style": [ "error", "unix" ],
+
+		"quotes": "off",
+		"@typescript-eslint/quotes": [ "error", "single" ],
+
+		"semi": "off",
+		"@typescript-eslint/semi": [ "error", "never" ],
+
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars": [ "warn", {
+				"vars": "all",
+				"args": "none"
+		}],
+
+		"no-prototype-builtins": [ 0 ],
+
+		"space-infix-ops": "off",
+		"@typescript-eslint/space-infix-ops": [ "error" ],
+
+		"object-curly-spacing": [ "error", "always", { 
+			"objectsInObjects": true 
+		}],
+
+		"brace-style": "off",
+	  "@typescript-eslint/brace-style": ["error"],
+
+		"@typescript-eslint/adjacent-overload-signatures": "warn",
+		"@typescript-eslint/array-type": ["warn", {
+			"default": "array-simple",
+			"readonly": "array-simple"
+		}],
+		"@typescript-eslint/await-thenable": "warn",
+		"@typescript-eslint/restrict-template-expressions": ["warn", { 
+			"allowNumber": true,
+			"allowAny": true
+		}],
+
+		"react/boolean-prop-naming": [ "error" ],
+		"react/no-typos": [ "error" ],
+		"react/jsx-curly-spacing": [ "error", {"when": "always"} ],
+		"react/display-name": ["off"],
+		"react/jsx-uses-react": "off",
+		"react/react-in-jsx-scope": "off",
+		"react/prop-types": "off"
+	}
+}
