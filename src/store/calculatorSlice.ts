@@ -1,9 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
+import Calculator from 'lib/calculator'
+
+const calculator = new Calculator()
 
 const calculatorSlice = createSlice({
 	name: 'calculator',
 	initialState: {
-		display: '0'
+		display: '0',
+		calculation: [],
+		history: [[]]
 	},
 	reducers: {
 		pressValue: {
