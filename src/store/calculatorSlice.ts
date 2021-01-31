@@ -1,8 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import Calculator from 'lib/calculator'
 
-const calculator = new Calculator()
-
 const calculatorSlice = createSlice({
 	name: 'calculator',
 	initialState: {
@@ -13,10 +11,11 @@ const calculatorSlice = createSlice({
 	reducers: {
 		pressValue: {
 			reducer: (state, { payload }: Record<string, string | number>) => {
-				state.display = `${state.display}${payload}`
+				state.display = Calculator.inputNumber(state.display, payload.toString())
 			},
 			prepare: (value: string | number) => ({ payload: value })
 		},
+		
 		pressOperator:  {
 			reducer: (state, { payload }: Record<string, string>) => {
 				state.display = `${state.display}${payload}`

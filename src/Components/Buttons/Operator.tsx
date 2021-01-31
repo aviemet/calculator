@@ -1,11 +1,11 @@
 import React from 'react'
 import Button from './Button'
 import { useDispatch } from 'react-redux'
-import { pressValue } from 'store/calculatorSlice'
+import { pressOperator } from 'store/calculatorSlice'
 import styled from 'styled-components'
 
 interface OperatorProps {
-	value: string | number,
+	value: string,
 	display?: string,
 	rows?: number,
 	cols?: number
@@ -15,7 +15,7 @@ const Operator: React.FC<OperatorProps> = ({ value, display, rows, cols }) => {
 	const dispatch = useDispatch()
 
 	const handleClick = e => {
-		dispatch(pressValue(value))
+		dispatch(pressOperator(value))
 	}
 
 	return (
