@@ -12,9 +12,10 @@ const History: React.FC = () => {
 	return (
 		<HistoryContainer>
 			<ul>
-				{ history.map(calculation => (
-					<li>
-						<span>{ calculation.join(' ') } = { calculate(calculation) }</span>
+				{ [...history].reverse().map((calculation, i) => (
+					<li key={ i }>
+						<div>{ calculation.join(' ') }</div>
+						<div>= { calculate(calculation) }</div>
 					</li>
 				)) }
 			</ul>
@@ -23,15 +24,32 @@ const History: React.FC = () => {
 }
 
 const HistoryContainer = styled.div`
-	background: #333;
+	background: #555;
 	color: #FFF;
 	min-width: 200px;
-	overflow: auto;
+	overflow: hidden;
 	margin: 10px 0;
-	padding: 0.5rem;
+	position: relative;
+	border-radius: 0 5px 5px 0;
 
-	li span {
-		word-wrap: nowrap;
+	ul{
+		height: 100%;
+		padding: 0.5rem;
+		overflow-y: auto;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+
+		li {
+			text-align: right;
+			border-radius: 3px;
+			background: #666;
+			padding: 1px 5px;
+			margin-bottom: 5px;
+			border-bottom: 2px solid #9e906f;
+		}
 	}
 `
 

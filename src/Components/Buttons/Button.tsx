@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react'
 import { useDispatch } from 'react-redux'
 import { keyPress } from 'store/calculatorSlice'
-import { KeypressContext } from 'App'
+import { KeypressContext } from 'App/Providers'
 import styled from 'styled-components'
 
 interface ButtonProps {

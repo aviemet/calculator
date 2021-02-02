@@ -14,8 +14,18 @@ export const calculate = (calculation: string[]): string | false => {
 	return `${mathjs.evaluate(calc.join(' '))}`
 }
 
+const moveCalculationToHistory = (state: SliceState): void => {
+	state.history.push(state.calculation)
+	state.calculation = []
+	state.nextMoveToHistory = false
+}
+
 const Calculator = {
 	handleNumber: (state: SliceState, value: string): SliceState => {
+		if(state.nextMoveToHistory) {
+			moveCalculationToHistory(state)
+		}
+
 		let displayValue = state.display
 
 		if(state.lastKeyOperator) {
@@ -35,12 +45,12 @@ const Calculator = {
 	},
 
 	handleOperator: (state: SliceState, operator: string): SliceState => {
-		// After the equals is pressed, when operator is next button
 		if(state.nextMoveToHistory) {
-			// Move result to first operand
-			state.history.push(state.calculation)
-			state.calculation = []
-			state.nextMoveToHistory = false
+			moveCalculationToHistory(state)
+		}
+
+		if(state.calculation.length > 1 && !state.calculation[state.calculation.length - 1].match(/[0-9.]/g)) {
+			state.calculation.pop()
 		}
 
 		state.calculation.push(state.display)
@@ -87,3 +97,9 @@ export const handleKeyPress = (state: SliceState, value: string): SliceState => 
 }
 
 export default Calculator
+
+/**
+ * Scenarios where the display becomes the history:
+ * Equal button is pressed
+ * 
+ */
