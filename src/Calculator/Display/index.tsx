@@ -5,14 +5,28 @@ import type { RootState } from 'store'
 import styled from 'styled-components'
 
 const Display: React.FC = () => {
-	const input = useSelector((state: RootState) => state.calculator.display)
+	const { display, calculation } = useSelector((state: RootState) => state.calculator)
 
 	return (
 		<DisplayContainer>
-			{ input }
+			<Calculation>
+				{ calculation.join(' ') }
+			</Calculation>
+			<Value>
+				{ display }
+			</Value>
 		</DisplayContainer>
 	)
 }
+
+const Calculation = styled.div`
+	font-size: 0.8rem;
+	height: 10px;
+`
+
+const Value = styled.div`
+	font-size: 1.2rem;
+`
 
 const DisplayContainer = styled.div`
 	width: 100%;

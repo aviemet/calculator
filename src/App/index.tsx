@@ -10,19 +10,19 @@ export const KeypressContext = React.createContext<(key: string, func: () => voi
 const App: React.FC = () => {
 	useEffect(() => {
 		document.addEventListener('keydown', e => {
+			console.log({ key: e.key })
 			if(keypressMap[e.key]) {
 				keypressMap[e.key]()
 			}
 		})
 	}, [])
 
-	const registerEventListener = (key: string, func: () => void) => {
+	const registerKeyListener = (key: string, func: () => void) => {
 		keypressMap[key] = func
-		console.log({ keypressMap })
 	}
 
 	return (
-		<KeypressContext.Provider value={ registerEventListener }>
+		<KeypressContext.Provider value={ registerKeyListener }>
 			<Provider store={ store }>
 				<LayoutContainer>
 					<Calculator />

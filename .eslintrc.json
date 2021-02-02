@@ -78,6 +78,14 @@
 			"allowNumber": true,
 			"allowAny": true
 		}],
+		"@typescript-eslint/no-floating-promises": "off",
+		"@typescript-eslint/explicit-module-boundary-types": "off",
+		
+		"@typescript-eslint/no-unsafe-assignment": "off",
+		"@typescript-eslint/no-unsafe-member-access": "off",
+		"@typescript-eslint/no-unsafe-call": "off",
+		
+		"no-unexpected-multiline": "off",
 
 		"react/boolean-prop-naming": [ "error" ],
 		"react/no-typos": [ "error" ],

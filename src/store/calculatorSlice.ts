@@ -1,31 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit'
-import Calculator from 'lib/calculator'
+import { handleKeyPress } from 'lib/calculator'
+
+export type SliceState = {
+	display:string
+	calculation: string[]
+	lastKeyOperator: boolean
+	nextMoveToHistory: boolean
+	history:string[][]
+}
 
 const calculatorSlice = createSlice({
 	name: 'calculator',
 	initialState: {
 		display: '0',
 		calculation: [],
-		history: [[]]
-	},
+		lastKeyOperator: false,
+		nextMoveToHistory: false,
+		history: []
+	} as SliceState,
 	reducers: {
-		pressValue: {
-			reducer: (state, { payload }: Record<string, string | number>) => {
-				state.display = Calculator.inputNumber(state.display, payload.toString())
-			},
-			prepare: (value: string | number) => ({ payload: value })
-		},
-		
-		pressOperator:  {
+		keyPress: {
 			reducer: (state, { payload }: Record<string, string>) => {
-				state.display = `${state.display}${payload}`
+				state = handleKeyPress(state, payload)
 			},
 			prepare: (value: string) => ({ payload: value })
-		}
+
+		},
 	}
 })
 
 const { actions, reducer } = calculatorSlice
 
-export const { pressValue, pressOperator } = actions
+export const { keyPress } = actions
 export default reducer
