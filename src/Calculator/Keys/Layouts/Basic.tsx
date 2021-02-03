@@ -3,7 +3,7 @@ import KeyContainer from 'Components/KeyContainer'
 
 const Basic: React.FC = () => {
 	return (
-		<KeyContainer cols={ 4 } rows={ 5 } width={ 250 }>
+		<KeyContainer cols={ 4 } rows={ 5 }>
 			<Buttons.AC />
 			<Buttons.Sign />
 			<Buttons.Percent />

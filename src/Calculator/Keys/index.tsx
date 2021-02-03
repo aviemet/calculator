@@ -1,4 +1,4 @@
-import Basic from './Basic'
+import { Basic, Scientific } from './Layouts'
 
 import styled from 'styled-components'
 
