@@ -1,15 +1,23 @@
 import { SliceState } from 'store/calculatorSlice'
 import { create, all } from 'mathjs'
 
+const isNumberString = (str: string) => {
+	return RegExp(/[0-9.]/).exec(str) !== null
+}
+
 class ReduxCalculator {
+	static mathjs = create(all, {})
+
 	private keyTypes = new Map<string, (state: SliceState, value: string) => SliceState>()
-	private mathjs = create(all, {})
+	private lastKeyOperator = false
+	private lastKeyEquals = false
 
 	constructor() {
 		// Binds dispatch methods to each key code
 		['1','2','3','4','5','6','7','8','9','0','.','pi'].forEach(val => this.keyTypes.set(val, this.handleNumber.bind(this)));
-		['+','-','/','*','='].forEach(val => this.keyTypes.set(val, this.handleOperator.bind(this)));
+		['+','-','/','*'].forEach(val => this.keyTypes.set(val, this.handleOperator.bind(this)));
 		['AC','+/-'].forEach(val => this.keyTypes.set(val, this.handleFunction.bind(this)))
+		this.keyTypes.set('=', this.handleEquals.bind(this))
 	}
 
 	/**
@@ -20,7 +28,7 @@ class ReduxCalculator {
 	 */
 	handleKeyPress(state: SliceState, value: string): SliceState {
 		if(!this.keyTypes.has(value)) return state
-
+		
 		return this.keyTypes.get(value)(state, value)
 	}
 
@@ -31,35 +39,41 @@ class ReduxCalculator {
 	 * @param calculation String array of operands to be calculated
 	 * @returns string | false
 	 */
-	calculate = (calculation: string[]): string | false => {
-		console.log({ calculation })
+	static calculate = (calculation: string[]): string | false => {
 		if(calculation.length < 3) return false
 		
 		const calc = [ ...calculation ]
-		if(!calculation[calculation.length - 1].match(/[0-9.]/g)) {
+		if(!isNumberString(calc[calc.length - 1])) {
 			calc.pop()
 		}
-
+	
 		// Recursively evaluate left to right
-		console.log({ calc, slice: calc.slice(0,3) })
-		const result = `${this.mathjs.evaluate(calc.slice(0,3).join(' '))}`
+		const result = `${ReduxCalculator.mathjs.evaluate(calc.slice(0,3).join(' '))}`
 		if(!result) {
-			return `${this.mathjs.evaluate(calc.join(' '))}`
+			return `${ReduxCalculator.mathjs.evaluate(calc.join(' '))}`
 		}
-		return `${this.mathjs.evaluate([result, ...calc.slice(3)].join(' '))}`
+		return `${ReduxCalculator.mathjs.evaluate([result, ...calc.slice(3)].join(' '))}`
 	}
 
+	/**
+	 * When a number is pressed:
+	 * if the last key pressed was an operator
+	 * 	push the display value onto the calculation array
+	 * 	set the dispaly value to the pressed value key
+	 * otherwise
+	 * 	continue building the number
+	 */
 	private handleNumber(state: SliceState, value: string): SliceState {
-		if(state.nextMoveToHistory) {
-			this.moveCalculationToHistory(state)
-		}
-
 		let displayValue = state.display
 
-		if(state.lastKeyOperator) {
+		if(this.lastKeyOperator) {
 			displayValue = '0'
-			state.lastKeyOperator = false
+		} else if(this.lastKeyEquals) {
+			displayValue = '0'
+			state.calculation = []
 		}
+		this.lastKeyEquals = false
+		this.lastKeyOperator = false
 
 		if(value === '.' && displayValue.includes('.')) {
 			state.display = displayValue
@@ -72,28 +86,54 @@ class ReduxCalculator {
 		return state
 	}
 
+	/**
+	 * When an operator is pressed:
+	 * if the last key pressed was an operator
+	 * 	replace the last element in the calculation array
+	 * otherwise
+	 * 	push display onto calculation array
+	 *  push the operator onto the calculation array
+	 * 	attempt to calculate the calculation array
+	 */
 	private handleOperator(state: SliceState, operator: string): SliceState {
-		if(state.nextMoveToHistory) {
-			this.moveCalculationToHistory(state)
+		if(this.lastKeyOperator) {
+			state.calculation[state.calculation.length - 1] = operator
+		} else if(this.lastKeyEquals) {
+			state.calculation = []
 		}
+		this.lastKeyEquals = false
 
-		if(state.calculation.length > 1 && !state.calculation[state.calculation.length - 1].match(/[0-9.]/g)) {
-			state.calculation.pop()
-		}
-
+		state.display = this.trimNumber(state.display)
 		state.calculation.push(state.display)
-		state.lastKeyOperator = true
+		state.calculation.push(operator)
+		this.lastKeyOperator = true
 
-		if(operator === '=') {
-			state.nextMoveToHistory = true
-		} else {
-			state.calculation.push(operator)
-		}
-
-		const result = this.calculate(state.calculation)
+		const result = ReduxCalculator.calculate(state.calculation)
 		if(result) {
 			state.display = result
 		}
+
+		return state
+	}
+
+	/**
+	 * When equals is pressed:
+	 * if the last key pressed was a number
+	 * 	push the display to the calculation array
+	 * 	attempt to calculate the calculation array
+	 * otherwise
+	 * 	
+	 */
+	private handleEquals(state: SliceState, operator: string): SliceState {
+		state.calculation.push(this.trimNumber(state.display))
+
+		const result = ReduxCalculator.calculate(state.calculation)
+		if(result) {
+			state.display = result
+			state.history.push(state.calculation)
+		}
+
+		this.lastKeyEquals = true
 
 		return state
 	}
@@ -103,19 +143,18 @@ class ReduxCalculator {
 			case 'AC':
 				state.display = '0'
 				state.calculation = []
+				this.lastKeyOperator = true
 				break
 			case '+/-':
-				state.display = this.mathjs.evaluate('display * -1', state).toString()
+				state.display = ReduxCalculator.mathjs.evaluate('display * -1', state).toString()
 				break
 		}
 
 		return state
 	}
 
-	private moveCalculationToHistory(state: SliceState): void {
-		state.history.push(state.calculation)
-		state.calculation = []
-		state.nextMoveToHistory = false
+	private trimNumber(number: string) {
+		return parseFloat(number).toString()
 	}
 }
 

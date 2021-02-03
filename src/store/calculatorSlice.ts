@@ -4,8 +4,6 @@ import ReduxCalculator from 'lib/ReduxCalculator'
 export type SliceState = {
 	display:string
 	calculation: string[]
-	lastKeyOperator: boolean
-	nextMoveToHistory: boolean
 	history:string[][]
 }
 
@@ -16,8 +14,6 @@ const calculatorSlice = createSlice({
 	initialState: {
 		display: '0',
 		calculation: [],
-		lastKeyOperator: false,
-		nextMoveToHistory: false,
 		history: []
 	} as SliceState,
 	reducers: {
@@ -26,7 +22,6 @@ const calculatorSlice = createSlice({
 				state = calculator.handleKeyPress(state, payload)
 			},
 			prepare: (value: string) => ({ payload: value })
-
 		},
 	}
 })

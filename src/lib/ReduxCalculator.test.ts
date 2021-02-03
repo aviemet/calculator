@@ -8,50 +8,65 @@ beforeEach(() => {
 	state = {
 		display: '0',
 		calculation: [],
-		lastKeyOperator: false,
-		nextMoveToHistory: false,
 		history: []
 	}
 })
 
 describe('ReduxCalculator.calculate', () => {
 	it('handles arithmetic with 2 operands', () => {
-		expect(calculator.calculate(['8','+','2'])).toBe('10')
-		expect(calculator.calculate(['8','-','2'])).toBe('6')
-		expect(calculator.calculate(['8','*','2'])).toBe('16')
-		expect(calculator.calculate(['8','/','2'])).toBe('4')
+		expect(ReduxCalculator.calculate(['8','+','2'])).toBe('10')
+		expect(ReduxCalculator.calculate(['8','-','2'])).toBe('6')
+		expect(ReduxCalculator.calculate(['8','*','2'])).toBe('16')
+		expect(ReduxCalculator.calculate(['8','/','2'])).toBe('4')
 	})
 
 	it('handles arithmetic with 3 operands', () => {
-		expect(calculator.calculate(['8','+','2','-','4'])).toBe('6')
-		expect(calculator.calculate(['8','-','2','-','4'])).toBe('2')
-		expect(calculator.calculate(['8','*','2','-','4'])).toBe('12')
-		expect(calculator.calculate(['8','/','2','-','4'])).toBe('0')
+		expect(ReduxCalculator.calculate(['8','+','2','-','4'])).toBe('6')
+		expect(ReduxCalculator.calculate(['8','-','2','-','4'])).toBe('2')
+		expect(ReduxCalculator.calculate(['8','*','2','-','4'])).toBe('12')
+		expect(ReduxCalculator.calculate(['8','/','2','-','4'])).toBe('0')
 	})
 
 	it('evalutes left to right ignoring precedence', () => {
-		expect(calculator.calculate(['8','+','2','*','4'])).toBe('40')
+		expect(ReduxCalculator.calculate(['8','+','2','*','4'])).toBe('40')
 	})
 
 	it('returns false with invalid input', () => {
-		expect(calculator.calculate(['8'])).toBe(false)
-		expect(calculator.calculate(['8','+'])).toBe(false)
+		expect(ReduxCalculator.calculate(['8'])).toBe(false)
+		expect(ReduxCalculator.calculate(['8','+'])).toBe(false)
 	})
 })
 
-describe('ReduxCalculator.handleKeyPress', () => {	
+describe('ReduxCalculator.handleKeyPress', () => {
 	it('builds numbers properly', () => {
 		['0','0','3','9','.','4','.','.','4'].forEach(num => state = calculator.handleKeyPress(state, num))
 		expect(state.display).toBe('39.44')
 	})
-	it('chains arithmetic properly', () => {
-		['1','0','+','5','/','5','='].forEach(num => state = calculator.handleKeyPress(state, num))
-		expect(state).toBe({
-			display: '3',
-			calculation: ['10','+','5','/','5'],
-			lastKeyOperator: true,
-			nextMoveToHistory: true,
+
+	it('performs calculation when using "="', () => {
+		['5','+','1','='].forEach(num => state = calculator.handleKeyPress(state, num))
+		expect(state).toMatchObject({
+			display: '6',
+			calculation: ['5','+','1'],
+			history: [['5','+','1']]
+		})
+	})
+
+	it('performs calculation when using an operator', () => {
+		['5','+','1','*'].forEach(num => state = calculator.handleKeyPress(state, num))
+		expect(state).toMatchObject({
+			display: '6',
+			calculation: ['5','+','1', '*'],
 			history: []
+		})
+	})
+
+	it('properly chains calculations', () => {
+		['1','0','.','+','5','/','5','=','-','6','='].forEach(num => state = calculator.handleKeyPress(state, num))
+		expect(state).toEqual({
+			display: '-3',
+			calculation: ['3','-','6'],
+			history: [['10','+','5','/','5'], ['3','-','6']]
 		})
 	})
 })

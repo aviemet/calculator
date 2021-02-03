@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import type { RootState } from 'store'
-import { calculate } from 'lib/calculator'
+import ReduxCalculator from 'lib/ReduxCalculator'
 
 import styled from 'styled-components'
 
@@ -15,7 +15,7 @@ const History: React.FC = () => {
 				{ [...history].reverse().map((calculation, i) => (
 					<li key={ i }>
 						<div>{ calculation.join(' ') }</div>
-						<div>= { calculate(calculation) }</div>
+						<div>= { ReduxCalculator.calculate(calculation) }</div>
 					</li>
 				)) }
 			</ul>
@@ -26,7 +26,7 @@ const History: React.FC = () => {
 const HistoryContainer = styled.div`
 	background: #555;
 	color: #FFF;
-	min-width: 200px;
+	width: 220px;
 	overflow: hidden;
 	margin: 10px 0;
 	position: relative;
