@@ -1,6 +1,9 @@
 import Display from './Display'
 import Keys from './Keys'
 import History from './History'
+import Settings from './Settings'
+
+import { FlexBreak } from 'Components'
 
 import styled from 'styled-components'
 
@@ -12,6 +15,8 @@ const Calculator: React.FC = () => {
 				<Keys />
 			</Bevel>
 			<History />
+			<FlexBreak />
+			<Settings />
 		</Centered>
 	)
 }
@@ -19,6 +24,8 @@ const Calculator: React.FC = () => {
 const Centered = styled.div`
 	margin: auto;
 	display: flex;
+	flex-wrap: wrap;
+  justify-content: center;
 `
 
 const Bevel = styled.div`

@@ -21,7 +21,7 @@ const Display: React.FC = () => {
 
 const Calculation = styled.div`
 	font-size: 0.8rem;
-	height: 10px;
+	padding-bottom: 4px;
 `
 
 const Value = styled.div`

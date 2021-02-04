@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react'
 import { useDispatch } from 'react-redux'
 import { keyPress } from 'store/calculatorSlice'
-import { KeypressContext } from 'App/Providers'
+import { KeypressContext } from 'App/Providers/KeyListener'
 import styled from 'styled-components'
 
 interface ButtonProps {
@@ -14,15 +14,17 @@ interface ButtonProps {
 
 const Button: React.FC<ButtonProps> = ({ value, keypress, display, rows, cols }) => {
 	const dispatch = useDispatch()
-	const registerKeyListener = useContext(KeypressContext)
+	const { registerKeyListener, unregisterKeyListener } = useContext(KeypressContext)
 
 	const handleClick = () => {
 		dispatch(keyPress(value.toString()))
 	}
 
 	useEffect(() => {
-		if(keypress) {
-			registerKeyListener(keypress, handleClick)
+		if(keypress) registerKeyListener(keypress, handleClick)
+
+		return () => {
+			if(keypress) unregisterKeyListener(keypress)
 		}
 	}, [])
 
