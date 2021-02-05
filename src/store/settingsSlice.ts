@@ -13,11 +13,12 @@ export type SliceState = {
 const settingsSlice = createSlice({
 	name: 'settings',
 	initialState: {
-		mode: MODES.BASIC
+		mode: window.localStorage.getItem('MODE') || MODES.BASIC
 	} as SliceState,
 	reducers: {
 		changeMode: {
 			reducer: (state, { payload }: PayloadAction<keyof typeof MODES>) => {
+				window.localStorage.setItem('MODE', payload)
 				state.mode = payload
 			},
 			prepare: (value: keyof typeof MODES) => ({ payload: value })

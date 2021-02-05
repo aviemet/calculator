@@ -1,13 +1,14 @@
 import React from 'react'
+import { MODES } from 'store/settingsSlice'
 import ModeSelect from './ModeSelect'
 import styled from 'styled-components'
 
 const Settings = () => {
 	return (
 		<SettingsContainer>
-			<ModeSelect name="mode" value="basic" />
-			<ModeSelect name="mode" value="scientific" />
-			<ModeSelect name="mode" value="programmer" />
+			<ModeSelect value={ MODES.BASIC } />
+			<ModeSelect value={ MODES.SCIENTIFIC } />
+			<ModeSelect value={ MODES.PROGRAMMER } />
 		</SettingsContainer>
 	)
 }

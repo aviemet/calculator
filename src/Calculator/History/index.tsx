@@ -7,7 +7,6 @@ import styled from 'styled-components'
 
 const History: React.FC = () => {
 	const { history } = useSelector((state: RootState) => state.calculator)
-	console.log({ history })
 
 	return (
 		<HistoryContainer>

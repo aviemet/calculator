@@ -18,13 +18,13 @@ const modifierKeysPressed: string[] = []
 const keypressMap: Record<string, () => void> = {}
 
 const KeyListener: React.FC = ({ children }) => {
-	const modifierKeys = ['Alt','Control','Meta','Shift']
+	const modifierKeys = ['Alt','Control','Meta']
 
 	useEffect(() => {
 		document.addEventListener('keydown', e => {
+			// Disable standard keypress events if a modifier key is being pressed
 			if(modifierKeys.includes(e.key)) {
 				modifierKeysPressed.push(e.key)
-				console.log({ pressed: modifierKeysPressed })
 			}
 
 			if(modifierKeysPressed.length === 0 && keypressMap[e.key]) {
@@ -35,7 +35,6 @@ const KeyListener: React.FC = ({ children }) => {
 		document.addEventListener('keyup', e => {
 			if(modifierKeysPressed.includes(e.key)) {
 				removeFirstMatch(e.key, modifierKeysPressed)
-				console.log({ pressed: modifierKeysPressed })
 			}
 		})
 	}, [])
