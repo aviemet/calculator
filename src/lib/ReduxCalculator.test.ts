@@ -12,6 +12,12 @@ beforeEach(() => {
 	}
 })
 
+interface Pilot {
+	id: number
+	name: string
+	years: number
+}
+
 describe('ReduxCalculator.calculate', () => {
 	it('handles arithmetic with 2 operands', () => {
 		expect(ReduxCalculator.calculate(['8','+','2'])).toBe('10')
@@ -34,6 +40,11 @@ describe('ReduxCalculator.calculate', () => {
 	it('returns false with invalid input', () => {
 		expect(ReduxCalculator.calculate(['8'])).toBe(false)
 		expect(ReduxCalculator.calculate(['8','+'])).toBe(false)
+	})
+
+	it('calculates percentages', () => {
+		expect(ReduxCalculator.calculate(['50','%','20'])).toBe('10')
+		// expect(ReduxCalculator.calculate(['6','*','50','%'])).toBe('3')
 	})
 })
 
@@ -69,4 +80,5 @@ describe('ReduxCalculator.handleKeyPress', () => {
 			history: [['10','+','5','/','5'], ['3','-','6']]
 		})
 	})
+
 })

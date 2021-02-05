@@ -8,16 +8,16 @@ const isNumberString = (str: string) => {
 class ReduxCalculator {
 	static mathjs = create(all, {})
 
-	private keyTypes = new Map<string, (state: SliceState, value: string) => SliceState>()
+	private keyMap = new Map<string, (state: SliceState, value: string) => SliceState>()
 	private lastKeyOperator = false
 	private lastKeyEquals = false
 
 	constructor() {
 		// Binds dispatch methods to each key code
-		['1','2','3','4','5','6','7','8','9','0','.','pi'].forEach(val => this.keyTypes.set(val, this.handleNumber.bind(this)));
-		['+','-','/','*'].forEach(val => this.keyTypes.set(val, this.handleOperator.bind(this)));
-		['AC','+/-'].forEach(val => this.keyTypes.set(val, this.handleFunction.bind(this)))
-		this.keyTypes.set('=', this.handleEquals.bind(this))
+		['1','2','3','4','5','6','7','8','9','0','.','pi'].forEach(val => this.keyMap.set(val, this.handleNumber.bind(this)));
+		['+','-','/','*'].forEach(val => this.keyMap.set(val, this.handleOperator.bind(this)));
+		['AC','+/-'].forEach(val => this.keyMap.set(val, this.handleFunction.bind(this)))
+		this.keyMap.set('=', this.handleEquals.bind(this))
 	}
 
 	/**
@@ -27,9 +27,9 @@ class ReduxCalculator {
 	 * @returns SliceState
 	 */
 	handleKeyPress(state: SliceState, value: string): SliceState {
-		if(!this.keyTypes.has(value)) return state
+		if(!this.keyMap.has(value)) return state
 		
-		return this.keyTypes.get(value)(state, value)
+		return this.keyMap.get(value)(state, value)
 	}
 
 	/**
@@ -42,11 +42,23 @@ class ReduxCalculator {
 	static calculate = (calculation: string[]): string | false => {
 		if(calculation.length < 3) return false
 		
-		const calc = [ ...calculation ]
-		if(!isNumberString(calc[calc.length - 1])) {
-			calc.pop()
-		}
-	
+
+		const calc = calculation.reduce((accumulator, val, i, arr) => {
+			// Look ahead for a % sign and divide previous operand by 100
+			if(arr.length > i + 1 && arr[i + 1] === '%') {
+				console.log({ i, val, product: accumulator.concat(`${ReduxCalculator.mathjs.evaluate(`${val} / 100`)}`) })
+				return accumulator.concat(`${ReduxCalculator.mathjs.evaluate(`${val} / 100`)}`)
+			}
+			if(val === '%') return accumulator.concat('*')
+
+			// ignore last element if it's not a number
+			if(i === arr.length - 1 && !isNumberString(val)) {
+				return accumulator
+			}
+
+			return accumulator.concat(val)
+		}, [] as string[])
+
 		// Recursively evaluate left to right
 		const result = `${ReduxCalculator.mathjs.evaluate(calc.slice(0,3).join(' '))}`
 		if(!result) {
