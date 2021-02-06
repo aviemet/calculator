@@ -1,4 +1,4 @@
-import { Basic, Scientific } from './Layouts'
+import { Basic, Scientific, Programmer } from './Layouts'
 
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
@@ -13,7 +13,7 @@ const Keys: React.FC = () => {
 			KeyLayout = Scientific
 			break
 		case MODES.PROGRAMMER:
-			// KeyLayout = Programmer
+			KeyLayout = Programmer
 			break
 		case MODES.BASIC:
 		default:

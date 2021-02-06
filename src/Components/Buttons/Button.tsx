@@ -5,14 +5,15 @@ import { KeypressContext } from 'App/Providers/KeyListener'
 import styled from 'styled-components'
 
 interface ButtonProps {
-	value: string | number,
+	value: string,
 	keypress?: string,
 	display?: string,
+	tooltip?: string,
 	rows?: number,
 	cols?: number
 }
 
-const Button: React.FC<ButtonProps> = ({ value, keypress, display, rows, cols }) => {
+const Button: React.FC<ButtonProps> = ({ value, keypress, display, tooltip, rows, cols }) => {
 	const dispatch = useDispatch()
 	const { registerKeyListener, unregisterKeyListener } = useContext(KeypressContext)
 
@@ -33,7 +34,10 @@ const Button: React.FC<ButtonProps> = ({ value, keypress, display, rows, cols })
 			rows={ rows }
 			cols={ cols }
 			onClick={ handleClick }
-		>{ display ? display : value }</StyledButton>
+			title={ tooltip && tooltip }
+		>
+			<div dangerouslySetInnerHTML={ { __html: display ? display : value } } />
+		</StyledButton>
 	)
 }
 

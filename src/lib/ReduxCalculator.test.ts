@@ -44,7 +44,7 @@ describe('ReduxCalculator.calculate', () => {
 
 	it('calculates percentages', () => {
 		expect(ReduxCalculator.calculate(['50','%','20'])).toBe('10')
-		// expect(ReduxCalculator.calculate(['6','*','50','%'])).toBe('3')
+		expect(ReduxCalculator.calculate(['6','*','50','%'])).toBe('3')
 	})
 })
 

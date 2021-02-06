@@ -46,10 +46,9 @@ class ReduxCalculator {
 		const calc = calculation.reduce((accumulator, val, i, arr) => {
 			// Look ahead for a % sign and divide previous operand by 100
 			if(arr.length > i + 1 && arr[i + 1] === '%') {
-				console.log({ i, val, product: accumulator.concat(`${ReduxCalculator.mathjs.evaluate(`${val} / 100`)}`) })
 				return accumulator.concat(`${ReduxCalculator.mathjs.evaluate(`${val} / 100`)}`)
 			}
-			if(val === '%') return accumulator.concat('*')
+			if(val === '%' && i !== arr.length - 1) return accumulator.concat('*')
 
 			// ignore last element if it's not a number
 			if(i === arr.length - 1 && !isNumberString(val)) {
@@ -58,6 +57,8 @@ class ReduxCalculator {
 
 			return accumulator.concat(val)
 		}, [] as string[])
+
+		if(calculation.includes('%')) console.log({ calc, calculation })
 
 		// Recursively evaluate left to right
 		const result = `${ReduxCalculator.mathjs.evaluate(calc.slice(0,3).join(' '))}`
