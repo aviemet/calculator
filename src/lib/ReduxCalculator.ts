@@ -13,11 +13,17 @@ class ReduxCalculator {
 	private lastKeyEquals = false
 
 	constructor() {
-		// Binds dispatch methods to each key code
+		// Numbers - Adds a value to the display
 		['1','2','3','4','5','6','7','8','9','0','.','pi'].forEach(val => this.keyMap.set(val, this.handleNumber.bind(this)));
-		['+','-','/','*'].forEach(val => this.keyMap.set(val, this.handleOperator.bind(this)));
-		['AC','+/-'].forEach(val => this.keyMap.set(val, this.handleFunction.bind(this)))
-		this.keyMap.set('=', this.handleEquals.bind(this))
+
+		// Operators - Operates on a value to its left and right
+		['+','-','/','*'].forEach(val => this.keyMap.set(val, this.handleOperator.bind(this)))
+
+		// Special cases
+		this.keyMap.set('=', this.handleEquals.bind(this));
+
+		// Functions
+		['AC','+/-','MC','M+','M-','MR'].forEach(val => this.keyMap.set(val, this.handleFunction.bind(this)))
 	}
 
 	/**
@@ -57,8 +63,6 @@ class ReduxCalculator {
 
 			return accumulator.concat(val)
 		}, [] as string[])
-
-		if(calculation.includes('%')) console.log({ calc, calculation })
 
 		// Recursively evaluate left to right
 		const result = `${ReduxCalculator.mathjs.evaluate(calc.slice(0,3).join(' '))}`

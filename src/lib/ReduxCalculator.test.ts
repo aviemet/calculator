@@ -12,12 +12,6 @@ beforeEach(() => {
 	}
 })
 
-interface Pilot {
-	id: number
-	name: string
-	years: number
-}
-
 describe('ReduxCalculator.calculate', () => {
 	it('handles arithmetic with 2 operands', () => {
 		expect(ReduxCalculator.calculate(['8','+','2'])).toBe('10')
